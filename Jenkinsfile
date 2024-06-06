@@ -3,7 +3,6 @@ pipeline {
     environment {
         DOCKER_IMAGE = 'jenkinsv2'
     }
-
     stages {
         stage('Build') {
             steps {
@@ -30,8 +29,8 @@ pipeline {
                 script {
                     // Detener y eliminar cualquier contenedor que esté utilizando el puerto 3000
                     sh '''
-                    docker ps --filter "ancestor=jenkinsv2" --format "{{.ID}}" | xargs -r docker stop
-                    docker ps --all --filter "ancestor=jenkinsv2" --format "{{.ID}}" | xargs -r docker rm
+                    docker ps --filter "ancestor=${DOCKER_IMAGE}" --format "{{.ID}}" | xargs -r docker stop
+                    docker ps --all --filter "ancestor=${DOCKER_IMAGE}" --format "{{.ID}}" | xargs -r docker rm
                     '''
                 }
             }
@@ -41,6 +40,14 @@ pipeline {
                 script {
                     docker.image(DOCKER_IMAGE).run('-d -p 3000:3000')
                 }
+            }
+        }
+    }
+    post {
+        always {
+            script {
+                // Limpiar contenedores que no estén en uso para evitar acumulación
+                sh 'docker system prune -f'
             }
         }
     }
