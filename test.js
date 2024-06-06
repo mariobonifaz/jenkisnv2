@@ -2,7 +2,7 @@ const request = require('supertest');
 const express = require('express');
 
 const app =express();
-app.get('api/vi/welcome', (req,res) => {
+app.get('/api/vi/welcome', (req,res) => {
     res.status(200).send('hello, world');
 });
 
