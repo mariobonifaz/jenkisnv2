@@ -19,7 +19,7 @@ pipeline {
                     echo "Starting Docker container for testing..."
                     docker.image(DOCKER_IMAGE).inside {
                         sh 'mkdir -p .npm-cache'
-                        sh 'npm config set cache .npm-cache --global'
+                        sh 'npm config set cache $(pwd)/.npm-cache --global'
                         sh 'npm install'
                         sh 'npm test'
                     }
