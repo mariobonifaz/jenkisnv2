@@ -1,35 +1,39 @@
-        pipeline {
-            agent any
-            environment {
-                DOCKER_IMAGE = 'jenkinsv2'
-            }
-
-            stages{
-                stage('Build') {
-                    steps {
-                        script {
-                            docker.build(DOCKER_IMAGE)
-                        }
-                    }
-                }
-                stage('Test') {
-                    steps {
-                        script {
-                            docker.image(DOCKER_IMAGE) .
-    inside {
-                                sh 'npm install'
-                                sh 'npm test'
-                            }
-                        }
-                    }
-                }
-                stage('Deploy') {
-                    steps {
-                        script {
-                            docker.image(DOCKER_IMAGE).run 
-    ('-d -p 3000:3000')
-                        }
-                    }
+pipeline {
+    agent any
+    environment {
+        DOCKER_IMAGE = 'jenkinsv2'
+    }
+    stages {
+        stage('Build') {
+            steps {
+                script {
+                    echo "Starting Docker build..."
+                    docker.build(DOCKER_IMAGE)
+                    echo "Docker build completed."
                 }
             }
         }
+        stage('Test') {
+            steps {
+                script {
+                    echo "Starting Docker container for testing..."
+                    docker.image(DOCKER_IMAGE).inside {
+                        sh 'sudo chown -R 992:991 /.npm || true'
+                        sh 'npm install'
+                        sh 'npm test'
+                    }
+                    echo "Docker container testing completed."
+                }
+            }
+        }
+        stage('Deploy') {
+            steps {
+                script {
+                    echo "Deploying Docker container..."
+                    docker.image(DOCKER_IMAGE).run('-d -p 3000:3000')
+                    echo "Docker container deployed."
+                }
+            }
+        }
+    }
+}
