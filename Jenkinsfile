@@ -38,7 +38,12 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    docker.image(DOCKER_IMAGE).run('-d -p 3000:3000')
+                    // Buscar y detener cualquier contenedor que esté utilizando el puerto 3000
+                    sh '''
+                    docker ps --filter "publish=3000" --format "{{.ID}}" | xargs -r docker stop
+                    docker ps --all --filter "publish=3000" --format "{{.ID}}" | xargs -r docker rm
+                    docker run -d -p 3000:3000 ${DOCKER_IMAGE}
+                    '''
                 }
             }
         }
