@@ -18,7 +18,7 @@ pipeline {
                 script {
                     echo "Starting Docker container for testing..."
                     docker.image(DOCKER_IMAGE).inside {
-                        sh 'sudo chown -R 992:991 /.npm || true'
+                        sh 'chown -R 992:991 /.npm || true'
                         sh 'npm install'
                         sh 'npm test'
                     }
