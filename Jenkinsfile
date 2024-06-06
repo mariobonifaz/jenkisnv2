@@ -18,7 +18,8 @@ pipeline {
                 script {
                     echo "Starting Docker container for testing..."
                     docker.image(DOCKER_IMAGE).inside {
-                        sh 'chown -R 992:991 /.npm || true'
+                        sh 'mkdir -p .npm-cache'
+                        sh 'npm config set cache .npm-cache --global'
                         sh 'npm install'
                         sh 'npm test'
                     }
