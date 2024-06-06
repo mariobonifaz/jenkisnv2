@@ -25,6 +25,17 @@ pipeline {
                 }
             }
         }
+        stage('Stop Old Containers') {
+            steps {
+                script {
+                    // Detener y eliminar cualquier contenedor que esté utilizando el puerto 3000
+                    sh '''
+                    docker ps --filter "ancestor=jenkinsv2" --format "{{.ID}}" | xargs -r docker stop
+                    docker ps --all --filter "ancestor=jenkinsv2" --format "{{.ID}}" | xargs -r docker rm
+                    '''
+                }
+            }
+        }
         stage('Deploy') {
             steps {
                 script {
