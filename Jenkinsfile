@@ -1,5 +1,5 @@
         pipeline {
-            agents any
+            agent any
             environment {
                 DOCKER_IMAGE = 'jenkinsv2'
             }
