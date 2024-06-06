@@ -7,5 +7,5 @@ app.get('/api/v1/welcome', (req,res) => {
 });
 
 app.listen(port, () => {
-    console.log('server is running in port: 3000');
+    console.log(`Server is running on port ${PORT}`);
 });
