@@ -9,7 +9,7 @@ app.get('/api/v1/welcome', (req,res) => {
 describe('GET /api/v1/welcome', () => {
     it('respond with hello world', (done) => {
         request(app)
-        .get('/api/v1/welcome!!')
-        .expect('hello, world', done);
+        .get('/api/v1/welcome')
+        .expect('hello, world!!', done);
     });
 });
